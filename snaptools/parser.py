@@ -34,10 +34,10 @@ def parse_args():
     # create the top-level parser
     parser = argparse.ArgumentParser(
          formatter_class=argparse.RawDescriptionHelpFormatter,
-         description = "Program: snaptools (a toolkit for single nucleus ATAC-seq analysis)\n"
+         description = "Program: snaptools (A module for working with snap files in Python)\n"
          + "Version: " + snaptools.__version__ + "\n"
-         + "Contact: Rongxin Fang <r4fang@gmail.com>" + "\n"
-         + "Website: www.rfang.org"
+         + "Contact: Rongxin Fang" + "\n"
+         + "E-mail:  r4fang@gmail.com"
     )
 
     # create the sub-level parser
