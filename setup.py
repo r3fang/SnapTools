@@ -1,18 +1,35 @@
 from setuptools import setup
 
-setup(name='snaptools',
-      version='1.0',
-      description='A module for working with snap files in Python',
-      url='https://github.com/r3fang/SnapTools.git',
-      download_url = 'https://github.com/r3fang/SnapTools/archive/v_01.tar.gz',
+snaptools_version = '1.0'
+
+setup(
+      name='snaptools',
+      version=snaptools_version,
       author='Rongxin Fang',
       author_email='r4fang@gmail.com',
-      license='MIT',
+      license='LICENSE',
       packages=['snaptools'],
+      description='A module for working with snap files in Python',
+      url='https://github.com/r3fang/SnapTools.git',
+      download_url='https://github.com/r3fang/SnapTools/archive/snaptools_v1.0.tar.gz',
+      python_requires='>=2.7,<=3.0',
       install_requires=[
           "pysam",
           "h5py",
           "numpy",
           "pybedtools"
       ],
+      keywords = ["Bioinformatics pipeline",
+                  "Single cell analysis",
+                  "Epigenomics",
+                  "Epigenetics",
+                  "ATAC-seq",
+                  "Chromatin Accessibility",
+                  "Functional genomics"],
+      scripts = ["bin/snaptools"],      
       zip_safe=False)
+
+if __name__ == '__main__':
+    f = open("snaptools/__init__.py",'w')
+    f.write("__version__ = \'"+snaptools_version+"\'"+"\n")
+    f.close()
