@@ -27,9 +27,11 @@ $ cd snaptools
 $ python setup.py install --user
 $ ./bin/snaptools
 
-Program: snaptools (a toolkit for single nucleus ATAC-seq analysis)
-Version: v1.0
-Contact: Rongxin Fang 
+usage: snaptools [-h]  ...
+
+Program: snaptools (A module for working with snap files in Python)
+Version: 1.1
+Contact: Rongxin Fang
 E-mail:  r4fang@gmail.com
 
 optional arguments:
@@ -49,6 +51,12 @@ functions:
     dump-fragment   Dump fragments of selected barcodes from a snap file.
     dump-barcode    Dump barcodes from a snap file.
     call-peak       Call peak using selected barcodes.
+```
+
+Install snaptools from PyPI
+
+```
+$ pip install snaptools --user
 ```
 
 ## Example
