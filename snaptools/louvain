@@ -30,7 +30,7 @@ import community
 from argparse import ArgumentParser, RawTextHelpFormatter
 import os
 
-def find_community(
+def louvain(
     edge_file,
     output_file,
     resolution

@@ -184,11 +184,11 @@ def parse_args():
                    macs_options=args.macs_options,
                    tmp_folder=args.tmp_folder)
     
-    if args.command == "louvain-cluster":
-         from snaptools.louvain import find_community
-         find_community(edge_file=args.edge_file,
-                        output_file=args.output_file,
-                        resolution=args.resolution)
+    if args.command == "louvain":
+         from snaptools.louvain import louvain
+         louvain(edge_file=args.edge_file,
+                 output_file=args.output_file,
+                 resolution=args.resolution)
                         
 def add_fastq_dex_subparser(subparsers):
      # create the parser for the "DMRfind" command
