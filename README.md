@@ -6,7 +6,7 @@ snap (Single-Nucleus Accessibility Profiles) file is a hierarchically structured
 
 * HD session contains snap-file version, created date, alignment and reference genome information. 
 * BD session contains all unique barcodes and corresponding meta data. 
-* BM session contains cell-by-bin matrices of different resolutions (or bin sizes). 
+* AM session contains cell-by-bin matrices of different resolutions (or bin sizes). 
 * PM session contains cell-by-peak count matrix. PM session contains cell-by-gene count matrix. 
 * FM session contains all usable fragments for each cell. Fragments are indexed for fast search. 
 * Detailed information about snap file can be found here.
@@ -24,13 +24,13 @@ Install snaptools from source code
 ```bash
 $ git clone https://github.com/r3fang/snaptools.git
 $ cd snaptools
-$ python setup.py install --user
+$ pip install 'snaptools==1.2' --user
 $ ./bin/snaptools
 
 usage: snaptools [-h]  ...
 
 Program: snaptools (A module for working with snap files in Python)
-Version: 1.1
+Version: 1.2
 Contact: Rongxin Fang
 E-mail:  r4fang@gmail.com
 
