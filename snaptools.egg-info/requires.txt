@@ -1,0 +1,6 @@
+pysam
+h5py
+numpy
+pybedtools
+networkx
+community

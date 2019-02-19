@@ -17,7 +17,9 @@ setup(
           "pysam",
           "h5py",
           "numpy",
-          "pybedtools"
+          "pybedtools",
+          "networkx",
+          "community"
       ],
       keywords = ["Bioinformatics pipeline",
                   "Single cell analysis",

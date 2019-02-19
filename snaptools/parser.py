@@ -57,6 +57,7 @@ def parse_args():
     add_dump_read_subparser(subparsers);
     add_dump_barcode_subparser(subparsers);
     add_call_peak_subparser(subparsers);
+    add_louvain_subparser(subparsers);
     
     if len(sys.argv) > 1:
          ## print out version
@@ -149,14 +150,6 @@ def parse_args():
                       barcode_file=args.barcode_file,
                       tmp_folder=args.tmp_folder,
                       overwrite=args.overwrite)
-                
-    #if args.command == "snap-layout":
-    #     from snaptools.snap import snap_layout
-    #     snap_layout(snap_file=args.snap_file)
-
-    #if args.command == "snap-del":
-    #     from snaptools.snap import snap_layout
-    #     snap_layout(snap_file=args.snap_file)
 
     if args.command == "snap-add-bmat":
          from snaptools.add_bmat import snap_bmat
@@ -190,7 +183,13 @@ def parse_args():
                    buffer_size=args.buffer_size,
                    macs_options=args.macs_options,
                    tmp_folder=args.tmp_folder)
-
+    
+    if args.command == "louvain-cluster":
+         from snaptools.louvain import find_community
+         find_community(edge_file=args.edge_file,
+                        output_file=args.output_file,
+                        resolution=args.resolution)
+                        
 def add_fastq_dex_subparser(subparsers):
      # create the parser for the "DMRfind" command
      parser_build = subparsers.add_parser(
@@ -776,4 +775,30 @@ def add_call_peak_subparser(subparsers):
                                   default=None,
                                   help="a directory to store temporary files. If not given, snaptools will automatically "
                                   + "generate a temporary location to store temporary files.")
+    
+
+def add_louvain_subparser(subparsers):
+    parser_build = subparsers.add_parser(
+         "louvain-cluster",
+         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+         help="Find communities using Louvain algorithm.")
+    
+    # add options
+    parser_build_req = parser_build.add_argument_group("required inputs")
+    parser_build_req.add_argument("--edge-file",
+                                  type=str,
+                                  required=True,
+                                  help="txt file contains edges and weights.")
+
+    parser_build_req.add_argument("--output-file",
+                                  type=str,
+                                  required=True,
+                                  help="output file name.")
+
+    parser_build_opt = parser_build.add_argument_group("optional inputs")
+    parser_build_opt.add_argument("--resolution",
+                                  type=float,
+                                  default=1.0,
+                                  required=False,
+                                  help="resolution for finding communities.")
     

@@ -1,0 +1,13 @@
+Metadata-Version: 1.2
+Name: snaptools
+Version: 1.1
+Summary: A module for working with snap files in Python
+Home-page: https://github.com/r3fang/SnapTools.git
+Author: Rongxin Fang
+Author-email: r4fang@gmail.com
+License: LICENSE
+Download-URL: https://github.com/r3fang/SnapTools/archive/snaptools_v1.1.tar.gz
+Description: UNKNOWN
+Keywords: Bioinformatics pipeline,Single cell analysis,Epigenomics,Epigenetics,ATAC-seq,Chromatin Accessibility,Functional genomics
+Platform: UNKNOWN
+Requires-Python: >=2.7,<=3.0
