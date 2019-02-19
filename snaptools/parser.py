@@ -779,9 +779,9 @@ def add_call_peak_subparser(subparsers):
 
 def add_louvain_subparser(subparsers):
     parser_build = subparsers.add_parser(
-         "louvain-cluster",
+         "louvain",
          formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-         help="Find communities using Louvain algorithm.")
+         help="Louvain communities finding.")
     
     # add options
     parser_build_req = parser_build.add_argument_group("required inputs")
