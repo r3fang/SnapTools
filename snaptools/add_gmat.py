@@ -126,7 +126,7 @@ def snap_gmat(snap_file,
     # check if GM session already exists
     f = h5py.File(snap_file, "r", libver='earliest');
     if "GM" in f:
-        print "error: cell x peak matrix already exists";
+        print "error: cell x gene matrix already exists";
         sys.exit(1);
     f.close();
     
