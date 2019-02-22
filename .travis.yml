@@ -1,7 +1,21 @@
-language: python
-rvm:
- - 2.7
-# command to install dependencies
-install:
-  - pip install --user
+# Disable sudo to speed up the build
+sudo: false
 
+# Set the build language to Python
+language: python
+
+# Set the python version to 2.7
+python: 2.7
+
+# Install the codecov pip dependency
+install:
+  - pip install snaptools
+
+# Run the unit test
+script:
+  - coverage run test.py
+
+# Push the results back to codecov
+after_success:
+  - snaptools
+  
