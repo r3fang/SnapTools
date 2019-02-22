@@ -24,13 +24,13 @@ Install snaptools from source code
 ```bash
 $ git clone https://github.com/r3fang/snaptools.git
 $ cd snaptools
-$ pip install 'snaptools==1.2' --user
+$ pip install -e .
 $ ./bin/snaptools
 
 usage: snaptools [-h]  ...
 
 Program: snaptools (A module for working with snap files in Python)
-Version: 1.2
+Version: 1.2.5
 Contact: Rongxin Fang
 E-mail:  r4fang@gmail.com
 
@@ -39,6 +39,7 @@ optional arguments:
 
 functions:
 
+    dex-fastq       Decomplex fastq file.
     index-genome    Index reference genome.
     align-paired-end
                     Align paired-end reads.
@@ -51,12 +52,13 @@ functions:
     dump-fragment   Dump fragments of selected barcodes from a snap file.
     dump-barcode    Dump barcodes from a snap file.
     call-peak       Call peak using selected barcodes.
+    louvain         Louvain communities finding.
 ```
 
 Install snaptools from PyPI
 
 ```
-$ pip install snaptools --user
+$ pip install snaptools==1.2.5 --user
 ```
 
 ## Example
