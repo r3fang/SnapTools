@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/r3fang/SnapTools.svg?branch=master)](https://travis-ci.org/r3fang/SnapTools)
+
 ## SnapTools
 A module for working with snap files in Python.
 
