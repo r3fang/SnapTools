@@ -46,7 +46,7 @@ def parse_args():
          dest="command",
          metavar="")
 
-    #add_fastq_dex_subparser(subparsers)
+    add_fastq_dex_subparser(subparsers)
     add_index_ref_subparser(subparsers);
     add_align_pe_subparser(subparsers);
     add_align_se_subparser(subparsers);
@@ -69,6 +69,13 @@ def parse_args():
     else:
          args = parser.parse_args(["-h"])
          exit()
+
+    if args.command == "dex-fastq":
+         from snaptools.dex_fastq import dex_fastq
+         dex_fastq(input_fastq=args.input_fastq,
+                   output_fastq=args.output_fastq,
+                   index_fastq_list=args.index_fastq_list
+                   )
 
     if args.command == "index-genome":
          from snaptools.alignment import index_ref
@@ -191,9 +198,8 @@ def parse_args():
                  resolution=args.resolution)
                         
 def add_fastq_dex_subparser(subparsers):
-     # create the parser for the "DMRfind" command
      parser_build = subparsers.add_parser(
-          "decomplex-fastq",
+          "dex-fastq",
           formatter_class=argparse.ArgumentDefaultsHelpFormatter,
           help="Decomplex fastq file.")
      
@@ -208,22 +214,12 @@ def add_fastq_dex_subparser(subparsers):
                                    type=str,
                                    required=True,
                                    help="output decomplexed fastq file")
-
-     parser_build_req.add_argument("--index1-fastq",
-                                   type=str,
-                                   required=True,
-                                   help="fastq file contains r7,i7 barcodes")
-
-     parser_build_req.add_argument("--index2-fastq",
-                                   type=str,
-                                   required=True,
-                                   help="fastq file contains r5,i5 barcodes")
-
-     parser_build_req.add_argument("--index-list",
-                                   type=str,
-                                   required=True,
-                                   help="pre-defined barcode list contains r7,i7,r5,i5 barcodes")
-
+    
+     parser_build_req.add_argument("--index-fastq-list",
+                                  type=str,
+                                  required=True,
+                                  nargs="+",
+                                  help="a list of fastq files that contain the cell indices.")
      
 def add_index_ref_subparser(subparsers):
      # create the parser for the "DMRfind" command

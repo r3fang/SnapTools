@@ -1,6 +1,6 @@
 from setuptools import setup
 
-snaptools_version = '1.2.3'
+snaptools_version = '1.2.4'
 
 setup(
       name='snaptools',
@@ -11,8 +11,9 @@ setup(
       packages=['snaptools'],
       description='A module for working with snap files in Python',
       url='https://github.com/r3fang/SnapTools.git',
-      download_url='https://github.com/r3fang/SnapTools/archive/snaptools_v1.2.3.tar.gz',
-      python_requires='>=2.7,<=3.0',
+      download_url='https://github.com/r3fang/SnapTools/archive/snaptools_v1.2.4.tar.gz',
+      python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.3.*, <3.0',
+      
       install_requires=[
           "pysam",
           "h5py",
