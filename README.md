@@ -4,7 +4,7 @@
 A module for working with snap files in Python.
 
 ## Introduction
-snap (Single-Nucleus Accessibility Profiles) file is a hierarchically structured hdf5 file that is specially designed for storing single nucleus ATAC-seq datasets. A snap file (version 4) contains the following sessions: header (HD), cell-by-bin accessibility matrix (AM), cell-by-peak matrix (PM), cell-by-gene matrix (GM), barcode (BD) and fragment (FM). 
+snap (Single Nucleus Accessibility Profile) file is a hierarchically structured hdf5 file that is specially designed for storing single nucleus ATAC-seq datasets. A snap file (version 4) contains the following sessions: header (HD), cell-by-bin accessibility matrix (AM), cell-by-peak matrix (PM), cell-by-gene matrix (GM), barcode (BD) and fragment (FM). 
 
 * HD session contains snap-file version, created date, alignment and reference genome information. 
 * BD session contains all unique barcodes and corresponding meta data. 
@@ -21,6 +21,12 @@ snap (Single-Nucleus Accessibility Profiles) file is a hierarchically structured
 * pybedtools
 
 ## Quick Install 
+Install snaptools from PyPI
+
+```
+$ pip install snaptools==1.2.5 --user
+```
+
 Install snaptools from source code
 
 ```bash
@@ -57,12 +63,6 @@ functions:
     louvain         Louvain communities finding.
 ```
 
-Install snaptools from PyPI
-
-```
-$ pip install snaptools==1.2.5 --user
-```
-
 ## Example
 
 **Step 1. Download test example**
@@ -71,13 +71,14 @@ $ pip install snaptools==1.2.5 --user
 $ wget http://renlab.sdsc.edu/r3fang/share/SnapTools/snaptools_test.tar.gz
 $ tar -xf snaptools_test.tar.gz
 $ cd snaptools_test/
+$ gunzip mm10.fa.gz
 ```
 
 **Step 2. Index Reference Genome (Optional)**. 
 Index the reference genome before alingment if you do not have one. (skip this step if you already have indexed genome). Here we show how to index the genome using BWA. User can choose different `--aligner `. 
 
 ```bash
-$ ./bin/snaptools index-genome            	 \
+$ snaptools index-genome                 \
 	--input-fasta=mm10.fa                \
 	--output-prefix=mm10                 \
     --aligner=bwa                        \
@@ -89,7 +90,7 @@ $ ./bin/snaptools index-genome            	 \
 We next align reads to the corresponding reference genome using snaptools with following command. After alignment, reads are sorted by the read names which allows for grouping reads according to the barcode (`--if-sort`). User can mutiple CPUs to speed up this step (`--num-threads`).
 
 ```bash
-$ ./bin/snaptools align-paired-end             \
+$ snaptools align-paired-end             \
 	--input-reference=mm10.fa            \
 	--input-fastq1=snaptools_test/demo.R1.fastq.gz      \
 	--input-fastq2=snaptools_test/demo.R2.fastq.gz      \
@@ -108,7 +109,7 @@ $ ./bin/snaptools align-paired-end             \
 After alignment, we converted pair-end reads into fragments and for each fragment, we check the following attributes: 1) mapping quality score MAPQ; 2) whether two ends are appropriately paired according to the alignment flag information; 3) fragment length. We only keep the properly paired fragments whose MAPQ (`--min-mapq`) is greater than 30 with fragment length less than 1000bp (`--max-flen`). Because the reads have been sorted based on the names, fragments belonging to the same cell (or barcode) are naturally grouped together which allows for removing PCR duplicates. After alignment and filtration, we generated a snap-format (Single-Nucleus Accessibility Profiles) file that contains meta data, cell-by-bin count matrices of a variety of resolutions, cell-by-peak count matrix. Detailed information about snap file can be found in here. 
 
 ```bash
-$ ./bin/snaptools snap-pre  \
+$ snaptools snap-pre  \
 	--input-file=demo.bam  \
 	--output-snap=demo.snap  \
 	--genome-name=mm10  \
@@ -146,7 +147,7 @@ CM - Total number of chrM fragments:         0
 Using generated snap file, we next create the cell-by-bin matrix. Snap file allows for storing cell-by-bin matrices of different resolutions. In the below example, three cell-by-bin matrices are created with bin size of 1,000, 5,000 and 10,000. 
 
 ```bash
-$ ./bin/snaptools snap-add-bmat  \
+$ snaptools snap-add-bmat  \
 	--snap-file=demo.snap  \
 	--bin-size-list 5000 10000  \
 	--verbose=True
@@ -156,7 +157,7 @@ $ ./bin/snaptools snap-add-bmat  \
 We next create the cell-by-gene matrix which is later used for cluster annotation.
 
 ```bash
-$ ./bin/snaptools snap-add-gmat  \
+$ snaptools snap-add-gmat  \
 	--snap-file=demo.snap  \
 	--gene-file=snaptools_test/gencode.vM16.gene.bed  \
 	--verbose=True
@@ -166,7 +167,7 @@ $ ./bin/snaptools snap-add-gmat  \
 We next add the cell-by-peak matrix.
 
 ```bash
-$ ./bin/snaptools snap-add-pmat  \
+$ snaptools snap-add-pmat  \
 	--snap-file=demo.snap  \
 	--peak-file=snaptools_test/peak.bed  \
 	--verbose=True
