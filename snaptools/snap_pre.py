@@ -79,6 +79,7 @@ def snap_pre(input_file,
              min_flen,
              max_flen,
              min_cov,
+             max_num,
              barcode_file,
              keep_chrm,
              keep_single,
@@ -113,6 +114,9 @@ def snap_pre(input_file,
 
     min_cov:
             min coverage per barcode. barcodes with sequencing fragments less than min_cov will be filtered before processed  
+
+    max_num:
+            max number of barcodes to be stored. Based on the coverage, top max_barcode barcodes are selected and stored.
     
     barcode_file: 
             a txt file that contains selected barcodes to create count matrix [None]
@@ -209,15 +213,22 @@ def snap_pre(input_file,
 
     # bed file does not contain any alignment information, force it to "NA"
     align_dict = snaptools.utilities.readAlignmentInfo(input_file, file_format);
-
+    
+    if verbose:
+        print "reading the barcodes and calculating coverage ...";
+    
     if barcode_file != None:
         barcode_dict = snaptools.snap.getBarcodesFromTxt(barcode_file);
     else:
         barcode_dict = snaptools.snap.getBarcodesFromInput(input_file, file_format);
-
-    if min_cov > 0:
+    
+    if min_cov == 0 and max_num == 10000000:
+        barcode_dict = barcode_dict;
+    else:        
         barcode_cov = snaptools.snap.getBarcodeCov(barcode_dict.keys(), input_file, file_format);
-        barcodes = [key for key in barcode_cov if barcode_cov[key] > min_cov];
+        barcode_cov = sorted(barcode_cov.items(), key=operator.itemgetter(1), reverse=True);
+        barcode_cov = barcode_cov[0:min(len(barcode_cov), max_num)];
+        barcodes = [key for [key, value] in barcode_cov if value > min_cov];
         barcode_dict = collections.OrderedDict(zip(sorted(barcodes), range(1,(len(barcodes)+1))));        
     
     f = h5py.File(output_snap, "w", libver='earliest');

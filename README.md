@@ -78,11 +78,13 @@ $ gunzip mm10.fa.gz
 Index the reference genome before alingment if you do not have one. (skip this step if you already have indexed genome). Here we show how to index the genome using BWA. User can choose different `--aligner `. 
 
 ```bash
-$ snaptools index-genome                 \
-	--input-fasta=mm10.fa                \
-	--output-prefix=mm10                 \
-    --aligner=bwa                        \
-	--path-to-aligner=path_to_bwa/bin/   \
+$ which bwa
+/opt/biotools/bwa/bin/bwa
+$ snaptools index-genome	\
+	--input-fasta=mm10.fa	\
+	--output-prefix=mm10	\
+    --aligner=bwa	\
+	--path-to-aligner=/opt/biotools/bwa/bin/	\
 	--num-threads=5
 ```
 
@@ -90,18 +92,18 @@ $ snaptools index-genome                 \
 We next align reads to the corresponding reference genome using snaptools with following command. After alignment, reads are sorted by the read names which allows for grouping reads according to the barcode (`--if-sort`). User can mutiple CPUs to speed up this step (`--num-threads`).
 
 ```bash
-$ snaptools align-paired-end             \
-	--input-reference=mm10.fa            \
-	--input-fastq1=snaptools_test/demo.R1.fastq.gz      \
-	--input-fastq2=snaptools_test/demo.R2.fastq.gz      \
-	--output-bam=demo.bam               \
-	--aligner=bwa                        \
-	--path-to-aligner=path_to_bwa/bin/   \
-	--read-fastq-command=zcat            \
-	--min-cov=0                          \
-	--num-threads=5                      \
-	--if-sort=True                       \
-	--tmp-folder=./                      \
+$ snaptools align-paired-end	\
+	--input-reference=mm10.fa	\
+	--input-fastq1=demo.R1.fastq.gz	\
+	--input-fastq2=demo.R2.fastq.gz	\
+	--output-bam=demo.bam	\
+	--aligner=bwa	\
+	--path-to-aligner=/opt/biotools/bwa/bin/	\
+	--read-fastq-command=zcat	\
+	--min-cov=0	\
+	--num-threads=5	\
+	--if-sort=True	\
+	--tmp-folder=./	\
 	--overwrite=TRUE                     
 ```
 
@@ -113,7 +115,7 @@ $ snaptools snap-pre  \
 	--input-file=demo.bam  \
 	--output-snap=demo.snap  \
 	--genome-name=mm10  \
-	--genome-size=snaptools_test/mm10.chrom.size  \
+	--genome-size=mm10.chrom.size  \
 	--min-mapq=30  \
 	--min-flen=0  \
 	--max-flen=1000  \
@@ -149,7 +151,7 @@ Using generated snap file, we next create the cell-by-bin matrix. Snap file allo
 ```bash
 $ snaptools snap-add-bmat  \
 	--snap-file=demo.snap  \
-	--bin-size-list 5000 10000  \
+	--bin-size-list 1000 5000 10000  \
 	--verbose=True
 ```
 
@@ -159,7 +161,7 @@ We next create the cell-by-gene matrix which is later used for cluster annotatio
 ```bash
 $ snaptools snap-add-gmat  \
 	--snap-file=demo.snap  \
-	--gene-file=snaptools_test/gencode.vM16.gene.bed  \
+	--gene-file=gencode.vM16.gene.bed  \
 	--verbose=True
 ```
 
@@ -169,7 +171,7 @@ We next add the cell-by-peak matrix.
 ```bash
 $ snaptools snap-add-pmat  \
 	--snap-file=demo.snap  \
-	--peak-file=snaptools_test/peak.bed  \
+	--peak-file=peak.bed  \
 	--verbose=True
 ```
 

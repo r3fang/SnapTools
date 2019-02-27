@@ -131,6 +131,7 @@ def parse_args():
                   min_flen=args.min_flen,
                   max_flen=args.max_flen,
                   min_cov=args.min_cov,
+                  max_num=args.max_num,
                   barcode_file=args.barcode_file,
                   keep_chrm=args.keep_chrm,
                   keep_single=args.keep_single,
@@ -488,6 +489,12 @@ def add_snap_pre_subparser(subparsers):
                                   +"we found by setting --min-cov, one can remove barcodes of low coverage without wasting time and storage. "
                                   +"Please note that this is not selection of good barcodes for downstream clustering analysis, it is only filteration"
                                   +"of very low-quality barcodes.")
+
+    parser_build_opt.add_argument("--max-num",
+                                  type=int,
+                                  default=1000000,
+                                  help="max number of barcodes to store. Barcodes are sorted based on the coverage and only the top --max-num barcodes "
+                                  +"will be stored.")
     
     parser_build_opt.add_argument("--keep-chrm",
                                   type=str2bool,
