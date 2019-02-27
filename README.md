@@ -146,7 +146,7 @@ CM - Total number of chrM fragments:         0
 ```
 
 **Step 5. Cell-by-Bin Matrix**. 
-Using generated snap file, we next create the cell-by-bin matrix. Snap file allows for storing cell-by-bin matrices of different resolutions. In the below example, three cell-by-bin matrices are created with bin size of 1,000, 5,000 and 10,000. 
+Using generated snap file, we next create the cell-by-bin matrix. Snap file allows for storing cell-by-bin matrices of different resolutions. In the below example, three cell-by-bin matrices are created with bin size of 1,000, 5,000 and 10,000. The cell-by-bin matrices will be added to `demo.snap` without creating another file. Same with `snap-add-pmat` and `snap-add-gmat`.
 
 ```bash
 $ snaptools snap-add-bmat  \
