@@ -175,5 +175,35 @@ $ snaptools snap-add-pmat  \
 	--verbose=True
 ```
 
+**Step 8. Dump Barcodes**. 
+We next extract barcodes and meta data.
 
+```bash
+$ snaptools dump-barcode  \
+	--snap-file=demo.snap  \
+	--output-file=demo.barcode.txt  
+
+$ head demo.barcode.txt
+Barcode	TN	UM	SE	SA	PE	PP	PL	US	UQ	CM
+ACATTGGCAACCAGGTTGCTGGTATTGGAAGT	118	113	0	0	113	113	113	113	0
+ACATTGGCAAGAGGCAACAAGGATATCTGAGT	222	210	0	0	210	210	210	210	0
+ACATTGGCAAGAGGCAACAAGGATCTAAGCCT	153	139	0	0	139	139	139	139	0
+ACATTGGCAAGAGGCAACAAGGATGTAAGGAG	112	104	0	0	104	104	104	104	0
+ACATTGGCAAGAGGCACATTCAGTCTAAGCCT	244	221	0	0	221	221	221	221	0
+ACATTGGCAAGAGGCAGAACGCATTATCCTCT	221	205	0	0	205	205	205	204	0
+ACATTGGCAAGAGGCATGCTGGTACTCTCTAT	238	231	0	0	231	231	231	228	0
+ACATTGGCAAGCAACGGGAAGACTTCCGGTAA	242	228	0	0	228	228	228	227	0
+ACATTGGCAAGCAACGGGAAGACTTTACGACC	159	135	0	0	135	135	135	135	0
+```
+
+**Step 9. Dump Fragments**. 
+We dump fragments belonging to a subset of barcodes (first 20 barcodes).
+
+```bash
+$ head -21 demo.barcode.txt > demo.barcode.20.txt 
+$ snaptools dump-fragment  \
+	--snap-file=demo.snap  \
+	--barcode-file=demo.barcode.20.txt \
+	--output-file=demo.barcode.20.bed.gz
+```
 
