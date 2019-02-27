@@ -73,6 +73,7 @@ except Exception:
 
 def snap_pmat(snap_file,
               peak_file,
+              buffer_size,
               tmp_folder,
               verbose):
               
@@ -83,12 +84,15 @@ def snap_pmat(snap_file,
     --------
     snap_file: 
         a snap format file;
-
+    
     peak_file: 
         a bed format file contains peak regions;
     
     Optional:
     --------
+    buffer_size:
+        Number of barcodes to store in the memory 
+        
     tmp_folder:
         folder to store temporarily created files;
 
@@ -133,7 +137,7 @@ def snap_pmat(snap_file,
     
     # first cut the fragments into small piecies, write them down
     fout_frag = tempfile.NamedTemporaryFile(delete=False, dir=tmp_folder);
-    dump_read(snap_file, fout_frag.name, 1000, None, tmp_folder, True);
+    dump_read(snap_file, fout_frag.name, buffer_size, None, tmp_folder, True);
 
     # in parallel find the overlap cell and peaks
     frag_bt = pybedtools.BedTool(fout_frag.name); 

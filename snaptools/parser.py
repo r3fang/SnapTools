@@ -170,6 +170,7 @@ def parse_args():
          from snaptools.add_pmat import snap_pmat
          snap_pmat(snap_file=args.snap_file,
                    peak_file=args.peak_file,
+                   buffer_size=args.buffer_size,
                    tmp_folder=args.tmp_folder,
                    verbose=args.verbose)
 
@@ -678,6 +679,12 @@ def add_snap_pmat_subparser(subparsers):
                                   help="bed file contains peaks.")
 
     parser_build_opt = parser_build.add_argument_group("optional inputs")    
+    parser_build_opt.add_argument("--buffer-size",
+                                  type=int,
+                                  default=1000,
+                                  required=False,
+                                  help="max number of barcodes be stored in the memory.")
+    
     parser_build_opt.add_argument("--tmp-folder",
                                   type=str,
                                   default=None,
