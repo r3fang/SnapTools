@@ -169,4 +169,3 @@ def snap_gmat(snap_file,
     # remove the temporary files
     subprocess.check_call(["rm", fout_frag.name]);
     return 0
-
