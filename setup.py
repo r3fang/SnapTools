@@ -17,7 +17,7 @@ setup(
           "pysam",
           "h5py",
           "numpy",
-          "pybedtools",
+          "pybedtools==0.7.10",
           "python-louvain"
       ],
       keywords = ["Bioinformatics pipeline",
