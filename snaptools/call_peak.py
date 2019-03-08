@@ -153,7 +153,7 @@ def call_peak(snap_file,
     # default aligner option
     if macs_options is None:
         macs_options = ["--nomodel", "--qval 1e-2", "-B", "--SPMR", "--call-summits", "--keep-dup all"];
-    
+
     # extract the barcodes
     barcode_dict = snaptools.snap.getBarcodesFromSnap(snap_file);
 
