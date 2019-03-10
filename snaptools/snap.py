@@ -296,7 +296,7 @@ def get_barcode_cov_from_bam(barcode_list, input_bam):
     barcode_dict = collections.defaultdict(lambda : 0);    
     samfile = pysam.AlignmentFile(input_bam, "rb");
     for _read in samfile:
-        barcode = _read.qname.split(":")[0];
+        barcode = _read.qname.split(":")[0].upper();
         # approximate counting, a read is half fragment
         barcode_dict[barcode] += 0.5;
     return barcode_dict;

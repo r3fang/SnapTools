@@ -232,7 +232,7 @@ def snap_pre(input_file,
         barcode_dict = collections.OrderedDict(zip(sorted(barcodes), range(1,(len(barcodes)+1))));        
     
     f = h5py.File(output_snap, "w", libver='earliest');
-    f.create_group("HD")
+    f.create_group("HD");
     f.create_dataset("HD/MG", data=header["MG"]);
     f.create_dataset("HD/VN", data=header["VN"]);
     f.create_dataset("HD/DT", data=header["DT"]);
@@ -280,7 +280,7 @@ def snap_pre(input_file,
                 # extract the barcode
                 barcode = frag.qname.split(":")[0].upper();
                 # only for printing the progress
-                check_point += 1
+                check_point += 1;
                 if verbose and check_point%100000 == 0:
                     print "%d\ttags, %s seconds " % (check_point, time.time() - start_time);  
                 # skip this barcode if it is not in the barcode list 
