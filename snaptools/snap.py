@@ -127,6 +127,30 @@ def getBarcodesFromSnap(fname):
     f.close()
     return barcode_dict
 
+
+def getBarcodesFromSnapSimple(fname):
+    """Read barcodes from a snap file
+    
+    Attributes:
+        fname - a snap-format file
+
+    Return:
+        a dictionary contains barcode without qc
+    """
+    try:
+        f = h5py.File(fname, 'r');
+    except IOError:
+        print("error: unable to open fname, check if it is a snap file")
+        sys.exit(1)
+
+    barcode_dict = collections.OrderedDict();
+    i = 1;
+    for item in f["BD/name"]:
+        barcode_dict[item] = i;         
+        i = i + 1;
+    f.close()
+    return barcode_dict
+    
 def getBarcodesFromInput(fname, ftype):
     """Read barcodes from a given input file (bam or bed)
     
@@ -160,9 +184,8 @@ def getBarcodesFromTxt(fname):
     with open(fname) as fin:
         for line in fin:
             if line.startswith("#"): continue;
-            if(len(line.split()) > 1):
-                barcode = line.split()[0].upper()
-                barcode_list.append(barcode)            
+            barcode = line.split()[0].upper()
+            barcode_list.append(barcode)            
     barocde_num = len(set(barcode_list));
     if barocde_num < len(barcode_list):
         print "warning: duplicate barcodes identified, remove it first"

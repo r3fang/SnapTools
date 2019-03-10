@@ -100,7 +100,7 @@ def snap_pmat(snap_file,
         a boolen variable indicates whether to output the progress [True];
     """
 
-    if not os.path.os(snap_file):
+    if not os.path.exists(snap_file):
         print 'error: ' + snap_file + ' does not exist!'
         sys.exit(1);
     

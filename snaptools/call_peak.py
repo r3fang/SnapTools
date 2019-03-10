@@ -154,12 +154,14 @@ def call_peak(snap_file,
     if macs_options is None:
         macs_options = ["--nomodel", "--qval 1e-2", "-B", "--SPMR", "--call-summits", "--keep-dup all"];
 
-    # extract the barcodes
-    barcode_dict = snaptools.snap.getBarcodesFromSnap(snap_file);
-
     # read barcode from barcode file 
     barcode_sel = snaptools.snap.getBarcodesFromTxt(barcode_file);
+    if(len(barcode_sel) == 0):
+        print "Error: input file %s has zero barcodes!" % barcode_file;
         
+    # extract the barcodes
+    barcode_dict = snaptools.snap.getBarcodesFromSnapSimple(snap_file);
+
     # compare selected barcodes and total barcodes in snap file
     if len(list(set(barcode_sel.keys()) & set(barcode_dict.keys()))) == 0:
         print 'Error: selected barcodes does not exist in the snap file!'
