@@ -807,10 +807,11 @@ def dump_read(snap_file,
     f.close();
     
     # cut barcodes into small chunks
-    barcode_list = snaptools.utilities.chunks(barcode_dict.keys(), buffer_size);
+    # force it to be capital
+    barcode_list = snaptools.utilities.chunks([x.upper() for x in barcode_dict.keys()], buffer_size);
     barcode_list = [list(barcode_chunk) for barcode_chunk in barcode_list];
     nChunk = len(barcode_list);
-
+    
     # write fragments down
     if output_file.endswith(".gz"):
         fout = gzip.open(output_file, "wb")

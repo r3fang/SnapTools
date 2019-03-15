@@ -9,9 +9,10 @@ snap (Single Nucleus Accessibility Profile) file is a hierarchically structured 
 * HD session contains snap-file version, created date, alignment and reference genome information. 
 * BD session contains all unique barcodes and corresponding meta data. 
 * AM session contains cell-by-bin matrices of different resolutions (or bin sizes). 
-* PM session contains cell-by-peak count matrix. PM session contains cell-by-gene count matrix. 
+* PM session contains cell-by-peak count matrix. 
+* GM session contains cell-by-gene count matrix. 
 * FM session contains all usable fragments for each cell. Fragments are indexed for fast search. 
-* Detailed information about snap file can be found here.
+* Detailed information about snap file can be found [here](https://github.com/r3fang/SnapTools/blob/master/docs/snap_format.docx).
 
 ## Requirements 
 * Python (2.7)
@@ -24,7 +25,7 @@ snap (Single Nucleus Accessibility Profile) file is a hierarchically structured 
 Install snaptools from PyPI
 
 ```
-$ pip install snaptools==1.2.5 --user
+$ pip install snaptools --user
 ```
 
 Install snaptools from source code
@@ -38,7 +39,7 @@ $ ./bin/snaptools
 usage: snaptools [-h]  ...
 
 Program: snaptools (A module for working with snap files in Python)
-Version: 1.2.5
+Version: 1.2.9
 Contact: Rongxin Fang
 E-mail:  r4fang@gmail.com
 
@@ -194,16 +195,5 @@ ACATTGGCAAGAGGCAGAACGCATTATCCTCT	221	205	0	0	205	205	205	204	0
 ACATTGGCAAGAGGCATGCTGGTACTCTCTAT	238	231	0	0	231	231	231	228	0
 ACATTGGCAAGCAACGGGAAGACTTCCGGTAA	242	228	0	0	228	228	228	227	0
 ACATTGGCAAGCAACGGGAAGACTTTACGACC	159	135	0	0	135	135	135	135	0
-```
-
-**Step 9. Dump Fragments**. 
-We dump fragments belonging to a subset of barcodes (first 20 barcodes).
-
-```bash
-$ head -21 demo.barcode.txt > demo.barcode.20.txt 
-$ snaptools dump-fragment  \
-	--snap-file=demo.snap  \
-	--barcode-file=demo.barcode.20.txt \
-	--output-file=demo.barcode.20.bed.gz
 ```
 
