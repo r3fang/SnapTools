@@ -549,7 +549,9 @@ def add_dump_read_subparser(subparsers):
     parser_build = subparsers.add_parser(
          "dump-fragment",
          formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-         help="Dump fragments of selected barcodes from a snap file.")
+         #help="Dump fragments of selected barcodes from a snap file.",
+         add_help=False
+         )
     
     # add options
     parser_build_req = parser_build.add_argument_group("required inputs")
@@ -592,7 +594,9 @@ def add_dump_barcode_subparser(subparsers):
     parser_build = subparsers.add_parser(
          "dump-barcode",
          formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-         help="Dump barcodes from a snap file.")
+         #help="Dump barcodes from a snap file.",
+         add_help=False
+         )
     
     # add options
     parser_build_req = parser_build.add_argument_group("required inputs")
@@ -737,7 +741,9 @@ def add_call_peak_subparser(subparsers):
     parser_build = subparsers.add_parser(
          "call-peak",
          formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-         help="Call peak using selected barcodes.")
+         #help="Call peak using selected barcodes.",
+         add_help=False
+         )
     
     # add options
     parser_build_req = parser_build.add_argument_group("required inputs")
@@ -791,7 +797,9 @@ def add_louvain_subparser(subparsers):
     parser_build = subparsers.add_parser(
          "louvain",
          formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-         help="Louvain communities finding.")
+         add_help=False
+         #help="Louvain communities finding.",
+         )
     
     # add options
     parser_build_req = parser_build.add_argument_group("required inputs")
