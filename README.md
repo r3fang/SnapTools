@@ -15,11 +15,14 @@ snap (Single Nucleus Accessibility Profile) file is a hierarchically structured 
 * Detailed information about snap file can be found [here](https://github.com/r3fang/SnapTools/blob/master/docs/snap_format.docx).
 
 ## Requirements 
-* Python (2.7)
+* Python (both python2 and python3)
 * pysam
 * h5py
 * numpy
 * pybedtools
+
+## Latest News
+* version 1.4.0 now supports both python2 and python3.
 
 ## Quick Install 
 Install snaptools from PyPI
@@ -39,7 +42,7 @@ $ ./bin/snaptools
 usage: snaptools [-h]  ...
 
 Program: snaptools (A module for working with snap files in Python)
-Version: 1.2.9
+Version: 1.4.0
 Contact: Rongxin Fang
 E-mail:  r4fang@gmail.com
 
@@ -58,10 +61,6 @@ functions:
     snap-add-bmat   Add cell x bin count matrix to snap file.
     snap-add-pmat   Add cell x peak count matrix to snap file.
     snap-add-gmat   Add cell x gene count matrix to snap file.
-    dump-fragment   Dump fragments of selected barcodes from a snap file.
-    dump-barcode    Dump barcodes from a snap file.
-    call-peak       Call peak using selected barcodes.
-    louvain         Louvain communities finding.
 ```
 
 ## Example
@@ -124,6 +123,7 @@ $ snaptools snap-pre  \
 	--keep-single=TRUE  \
 	--keep-secondary=False  \
 	--overwrite=True  \
+	--max-num=1000000  \
 	--min-cov=100  \
 	--verbose=True
 ```
@@ -135,24 +135,24 @@ $ cat demo.snap.qc
 
 Total number of unique barcodes:             3217
 TN - Total number of fragments:              576676
-UM - Total number of uniquely mapped:        540304
+UM - Total number of uniquely mapped:        540307
 SE - Total number of single ends:            0
 SA - Total number of secondary alignments:   1
-PE - Total number of paired ends:            540303
-PP - Total number of proper paired:          539783
-PL - Total number of proper frag len:        539783
-US - Total number of usable fragments:       539783
-UQ - Total number of unique fragments:       537347
+PE - Total number of paired ends:            540306
+PP - Total number of proper paired:          539772
+PL - Total number of proper frag len:        539772
+US - Total number of usable fragments:       539772
+UQ - Total number of unique fragments:       537336
 CM - Total number of chrM fragments:         0
 ```
 
 **Step 5. Cell-by-Bin Matrix**. 
-Using generated snap file, we next create the cell-by-bin matrix. Snap file allows for storing cell-by-bin matrices of different resolutions. In the below example, three cell-by-bin matrices are created with bin size of 1,000, 5,000 and 10,000. The cell-by-bin matrices will be added to `demo.snap` without creating another file. Same with `snap-add-pmat` and `snap-add-gmat`.
+Using generated snap file, we next create the cell-by-bin matrix. Snap file allows for storing cell-by-bin matrices of different resolutions. In the below example, three cell-by-bin matrices are created with bin size of 5,000 and 10,000. The cell-by-bin matrices will be added to `demo.snap` without creating another file. Same with `snap-add-pmat` and `snap-add-gmat`.
 
 ```bash
 $ snaptools snap-add-bmat  \
 	--snap-file=demo.snap  \
-	--bin-size-list 1000 5000 10000  \
+	--bin-size-list 5000 10000  \
 	--verbose=True
 ```
 
@@ -163,5 +163,15 @@ We next create the cell-by-gene matrix which is later used for cluster annotatio
 $ snaptools snap-add-gmat  \
 	--snap-file=demo.snap  \
 	--gene-file=gencode.vM16.gene.bed  \
+	--verbose=True
+```
+
+**Step 7. Cell-by-peak Matrix**. 
+We next create the cell-by-peak matrix which is later used for differential analysis.
+
+```bash
+$ snaptools snap-add-gmat  \
+	--snap-file=demo.snap  \
+	--peak-file=peak.bed   \
 	--verbose=True
 ```
