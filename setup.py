@@ -1,6 +1,6 @@
 from setuptools import setup
 
-snaptools_version = '1.3.0'
+snaptools_version = '1.4.0'
 
 setup(
       name='snaptools',
@@ -11,14 +11,15 @@ setup(
       packages=['snaptools'],
       description='A module for working with snap files in Python',
       url='https://github.com/r3fang/SnapTools.git',
-      python_requires='>=2.7, <3.0',
+      python_requires='>=2.7',
       
       install_requires=[
           "pysam",
           "h5py",
           "numpy",
           "pybedtools==0.7.10",
-          "python-louvain"
+          "python-louvain",
+          "future"
       ],
       keywords = ["Bioinformatics pipeline",
                   "Single cell analysis",

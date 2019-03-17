@@ -3,3 +3,4 @@ h5py
 numpy
 pybedtools==0.7.10
 python-louvain
+future

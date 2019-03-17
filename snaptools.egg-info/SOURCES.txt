@@ -10,7 +10,6 @@ snaptools/alignment.py
 snaptools/call_peak.py
 snaptools/dex_fastq.py
 snaptools/dump_barcode.py
-snaptools/fastq_dex.py
 snaptools/global_var.py
 snaptools/gtf.py
 snaptools/louvain.py

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 import os
 import subprocess
@@ -146,16 +147,16 @@ def dex_fastq(input_fastq,
     fr1.close()
     fout.close()
     #### generate a report
-    print "Total number of sequencing reads: ", TOTAL_READS
-    print "Total number of usable reads: ", QUALI_READS
+    print("Total number of sequencing reads: ", TOTAL_READS)
+    print("Total number of usable reads: ", QUALI_READS)
     print "=========================================="
     for key in r7_dict:
-        print '%s\t%s\t%.2f%%' % (key, "r7", round(float(r7_dict[key])/QUALI_READS * 100, 2));
+        print('%s\t%s\t%.2f%%' % (key, "r7", round(float(r7_dict[key])/QUALI_READS * 100, 2)));
     for key in i7_dict:
-        print '%s\t%s\t%.2f%%' % (key, "i7", round(float(i7_dict[key])/QUALI_READS * 100, 2));
+        print('%s\t%s\t%.2f%%' % (key, "i7", round(float(i7_dict[key])/QUALI_READS * 100, 2)));
     for key in r5_dict:
-        print '%s\t%s\t%.2f%%' % (key, "r5", round(float(r5_dict[key])/QUALI_READS * 100, 2));
+        print('%s\t%s\t%.2f%%' % (key, "r5", round(float(r5_dict[key])/QUALI_READS * 100, 2)));
     for key in i5_dict:
-        print '%s\t%s\t%.2f%%' % (key, "i5", round(float(i5_dict[key])/QUALI_READS * 100, 2));
+        print('%s\t%s\t%.2f%%' % (key, "i5", round(float(i5_dict[key])/QUALI_READS * 100, 2)));
     return 0
 
