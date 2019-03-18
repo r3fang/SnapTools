@@ -22,13 +22,14 @@ snap (Single Nucleus Accessibility Profile) file is a hierarchically structured 
 * pybedtools
 
 ## Latest News
-* version 1.4.0 now supports both python2 and python3.
+* add `snap-del` which deletes a session in snap file.
+* version 1.4.+ now supports both python2 and python3.
 
 ## Quick Install 
 Install snaptools from PyPI
 
 ```
-$ pip install snaptools --user
+$ pip install snaptools
 ```
 
 Install snaptools from source code
@@ -42,7 +43,7 @@ $ ./bin/snaptools
 usage: snaptools [-h]  ...
 
 Program: snaptools (A module for working with snap files in Python)
-Version: 1.4.0
+Version: 1.4.1
 Contact: Rongxin Fang
 E-mail:  r4fang@gmail.com
 
@@ -61,6 +62,7 @@ functions:
     snap-add-bmat   Add cell x bin count matrix to snap file.
     snap-add-pmat   Add cell x peak count matrix to snap file.
     snap-add-gmat   Add cell x gene count matrix to snap file.
+	snap-del        Delete a session.
 ```
 
 ## Example
@@ -170,7 +172,7 @@ $ snaptools snap-add-gmat  \
 We next create the cell-by-peak matrix which is later used for differential analysis.
 
 ```bash
-$ snaptools snap-add-gmat  \
+$ snaptools snap-add-pmat  \
 	--snap-file=demo.snap  \
 	--peak-file=peak.bed   \
 	--verbose=True

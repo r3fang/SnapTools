@@ -1,6 +1,6 @@
 from setuptools import setup
 
-snaptools_version = '1.4.0'
+snaptools_version = '1.4.1'
 
 setup(
       name='snaptools',

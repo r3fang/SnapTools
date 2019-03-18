@@ -113,6 +113,13 @@ def snap_gmat(snap_file,
         print(('error: ' + gene_file + ' does not exist!'));
         sys.exit(1);
     
+    # check if GM session already exists
+    f = h5py.File(snap_file, "r", libver='earliest');
+    if "GM" in f:
+        print(("error: cell x gene matrix already exists, delete it first using snap-del"));
+        sys.exit(1);
+    f.close();
+    
     # check if snap_file is a snap-format file
     file_format = snaptools.utilities.checkFileFormat(gene_file);
     if file_format != "bed":
@@ -125,14 +132,6 @@ def snap_gmat(snap_file,
     
     # extract the barcodes
     barcode_dict = getBarcodesFromSnap(snap_file);
-
-    # check if GM session already exists
-    f = h5py.File(snap_file, "r", libver='earliest');
-    if "GM" in f:
-        print(("error: cell x gene matrix already exists"));
-        sys.exit(1);
-    f.close();
-    
         
     # first cut the fragments into small piecies, write them down
     fout_frag = tempfile.NamedTemporaryFile(delete=False, dir=tmp_folder);

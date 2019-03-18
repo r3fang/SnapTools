@@ -106,22 +106,23 @@ def snap_bmat(snap_file,
     file_format = snaptools.utilities.checkFileFormat(snap_file);
     if file_format != "snap":
         print(("error: input file %s is not a snap file!" % snap_file));
+        sys.exit(1);
     
-    # extract the barcodes
-    barcode_dict = snaptools.snap.getBarcodesFromSnap(snap_file);
-
     # create the bin list
     f = h5py.File(snap_file, "a", libver='earliest');
 
+    if "AM" in f:
+        print("error: AM - cell x bin accessibility matrix already exists, delete it first using snap-del ")
+        sys.exit(1)
+    
     try:        
         genome_dict = dict(list(zip([item.decode() for item in f["HD"]["SQ"]["SN"][:]], f["HD"]["SQ"]["SL"][:])))
     except KeyError:
         print("error: unable to read genome information")
         sys.exit(1)
     
-    if "AM" in f:
-        print("error: AM - cell x bin accessibility matrix already exists, delete it first using --snap-del ")
-        sys.exit(1)
+    # extract the barcodes
+    barcode_dict = snaptools.snap.getBarcodesFromSnap(snap_file);
 
     bin_dict_list = collections.defaultdict(dict);
 

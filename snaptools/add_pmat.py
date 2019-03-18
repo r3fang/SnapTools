@@ -121,16 +121,16 @@ def snap_pmat(snap_file,
     file_format = snaptools.utilities.checkFileFormat(peak_file);
     if file_format != "bed":
         print(("error: input file %s is not a bed file!" % snap_file));
-
-    # extract the barcodes
-    barcode_dict = getBarcodesFromSnap(snap_file);
-
+    
     # check if PM session already exists
     f = h5py.File(snap_file, "r", libver='earliest');
     if "PM" in f:
-        print("error: cell x peak matrix already exists");
+        print("error: cell x peak matrix already exists, delete it using snap-del first");
         sys.exit(1);
     f.close()
+    
+    # extract the barcodes
+    barcode_dict = getBarcodesFromSnap(snap_file);
 
     # create the peaks;
     peak_dict = collections.OrderedDict(); 
