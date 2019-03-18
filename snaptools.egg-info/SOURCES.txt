@@ -15,6 +15,7 @@ snaptools/gtf.py
 snaptools/louvain.py
 snaptools/parser.py
 snaptools/snap.py
+snaptools/snap_del.py
 snaptools/snap_pre.py
 snaptools/utilities.py
 snaptools.egg-info/PKG-INFO

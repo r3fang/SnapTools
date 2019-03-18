@@ -39,7 +39,6 @@ $ git clone https://github.com/r3fang/snaptools.git
 $ cd snaptools
 $ pip install -e .
 $ ./bin/snaptools
-
 usage: snaptools [-h]  ...
 
 Program: snaptools (A module for working with snap files in Python)
@@ -52,7 +51,7 @@ optional arguments:
 
 functions:
 
-    dex-fastq       Decomplex fastq file.
+    dex-fastq       De-multicomplex fastq file.
     index-genome    Index reference genome.
     align-paired-end
                     Align paired-end reads.
@@ -62,7 +61,7 @@ functions:
     snap-add-bmat   Add cell x bin count matrix to snap file.
     snap-add-pmat   Add cell x peak count matrix to snap file.
     snap-add-gmat   Add cell x gene count matrix to snap file.
-	snap-del        Delete a session.
+    snap-del        Delete a session.
 ```
 
 ## Example
@@ -109,7 +108,7 @@ $ snaptools align-paired-end	\
 	--overwrite=TRUE                     
 ```
 
-**Step 4. Pre-processing**. 
+**Step 4. Pre-processing**.         
 After alignment, we converted pair-end reads into fragments and for each fragment, we check the following attributes: 1) mapping quality score MAPQ; 2) whether two ends are appropriately paired according to the alignment flag information; 3) fragment length. We only keep the properly paired fragments whose MAPQ (`--min-mapq`) is greater than 30 with fragment length less than 1000bp (`--max-flen`). Because the reads have been sorted based on the names, fragments belonging to the same cell (or barcode) are naturally grouped together which allows for removing PCR duplicates. After alignment and filtration, we generated a snap-format (Single-Nucleus Accessibility Profiles) file that contains meta data, cell-by-bin count matrices of a variety of resolutions, cell-by-peak count matrix. Detailed information about snap file can be found in here. 
 
 ```bash
@@ -148,7 +147,7 @@ UQ - Total number of unique fragments:       537336
 CM - Total number of chrM fragments:         0
 ```
 
-**Step 5. Cell-by-Bin Matrix**. 
+**Step 5. Cell-by-Bin Matrix**.            
 Using generated snap file, we next create the cell-by-bin matrix. Snap file allows for storing cell-by-bin matrices of different resolutions. In the below example, three cell-by-bin matrices are created with bin size of 5,000 and 10,000. The cell-by-bin matrices will be added to `demo.snap` without creating another file. Same with `snap-add-pmat` and `snap-add-gmat`.
 
 ```bash
@@ -158,7 +157,7 @@ $ snaptools snap-add-bmat  \
 	--verbose=True
 ```
 
-**Step 6. Cell-by-gene Matrix**. 
+**Step 6. Cell-by-gene Matrix**.        
 We next create the cell-by-gene matrix which is later used for cluster annotation.
 
 ```bash
@@ -168,7 +167,7 @@ $ snaptools snap-add-gmat  \
 	--verbose=True
 ```
 
-**Step 7. Cell-by-peak Matrix**. 
+**Step 7. Cell-by-peak Matrix**.          
 We next create the cell-by-peak matrix which is later used for differential analysis.
 
 ```bash

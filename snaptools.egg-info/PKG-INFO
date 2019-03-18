@@ -1,6 +1,6 @@
 Metadata-Version: 1.2
 Name: snaptools
-Version: 1.4.0
+Version: 1.4.1
 Summary: A module for working with snap files in Python
 Home-page: https://github.com/r3fang/SnapTools.git
 Author: Rongxin Fang
