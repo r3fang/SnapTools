@@ -1,6 +1,6 @@
 pysam
 h5py
 numpy
-pybedtools==0.7.10
+pybedtools>=0.7
 python-louvain
 future

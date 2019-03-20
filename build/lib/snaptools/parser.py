@@ -58,6 +58,7 @@ def parse_args():
     add_dump_barcode_subparser(subparsers);
     add_call_peak_subparser(subparsers);
     add_louvain_subparser(subparsers);
+    add_snap_del_subparser(subparsers);
     
     if len(sys.argv) > 1:
          ## print out version
@@ -198,12 +199,17 @@ def parse_args():
          louvain(edge_file=args.edge_file,
                  output_file=args.output_file,
                  resolution=args.resolution)
-                        
+
+    if args.command == "snap-del":
+         from snaptools.snap_del import snap_del
+         snap_del(snap_file=args.snap_file,
+                 session_name=args.session_name)
+
 def add_fastq_dex_subparser(subparsers):
      parser_build = subparsers.add_parser(
           "dex-fastq",
           formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-          help="Decomplex fastq file.")
+          help="De-multicomplex fastq file.")
      
      # add options
      parser_build_req = parser_build.add_argument_group("required inputs")
@@ -819,4 +825,28 @@ def add_louvain_subparser(subparsers):
                                   default=1.0,
                                   required=False,
                                   help="resolution for finding communities.")
+    
+
+def add_snap_del_subparser(subparsers):
+    parser_build = subparsers.add_parser(
+         "snap-del",
+         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+         add_help=True,
+         help="Delete a session.",
+         )
+    
+    # add options
+    parser_build_req = parser_build.add_argument_group("required inputs")
+    parser_build_req.add_argument("--snap-file",
+                                  type=str,
+                                  required=True,
+                                  help="snap file."
+                                  )
+
+    parser_build_req.add_argument("--session-name",
+                                  type=str,
+                                  required=True,
+                                  help="session to be deleted in snap file. 'AM': cell-by-bin matrix. All cell-by-bin "
+                                  +"matrices will be removed. 'PM': cell-by-peak matrix. 'GM': cell-by-gene matrix."
+                                  )
     

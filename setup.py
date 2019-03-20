@@ -1,6 +1,6 @@
 from setuptools import setup
 
-snaptools_version = '1.4.1'
+snaptools_version = '1.4.3'
 
 setup(
       name='snaptools',
@@ -17,7 +17,7 @@ setup(
           "pysam",
           "h5py",
           "numpy",
-          "pybedtools==0.7.10",
+          "pybedtools>=0.7",
           "python-louvain",
           "future"
       ],

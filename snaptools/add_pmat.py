@@ -120,7 +120,8 @@ def snap_pmat(snap_file,
     # check if snap_file is a snap-format file
     file_format = snaptools.utilities.checkFileFormat(peak_file);
     if file_format != "bed":
-        print(("error: input file %s is not a bed file!" % snap_file));
+        print(("error: input file %s is not a bed file!" % peak_file));
+        sys.exit(1)
     
     # check if PM session already exists
     f = h5py.File(snap_file, "r", libver='earliest');
