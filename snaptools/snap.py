@@ -832,8 +832,9 @@ def dump_read(snap_file,
     for i in range(nChunk):
         # extract the fragment list of given barcodes
         frag_list = getFragFromBarcode(snap_file, barcode_list[i]);
-        for item in frag_list:
-            fout.write(("\t".join(map(str, item)) + "\n").encode())
+        if(len(frag_list) > 0):
+            for item in frag_list:
+                fout.write(("\t".join(map(str, item)) + "\n").encode())
         del frag_list
     fout.close()
     return 0
