@@ -76,10 +76,10 @@ def filter_fastq(fname, barcodes, tmp_folder):
         sys.exit(1)    
     
     if len(barcodes) == 0:
-	print("error: no barcode is selected")
-	sys.exit(1)
+	    print("error: no barcode is selected")
+	    sys.exit(1)
     else:
-	barcodes = set(barcodes)
+	    barcodes = set(barcodes)
     
     fout = tempfile.NamedTemporaryFile(delete=False, dir=tmp_folder)
     fout_name = fout.name;

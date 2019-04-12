@@ -37,6 +37,7 @@ import shlex
 import tempfile
 import warnings
 from builtins import str
+import bz2
 
 try:
     import snaptools.utilities
@@ -237,19 +238,22 @@ def getBarcodesFromBed(input_bed):
     if snaptools.utilities.file_type(input_bed) == "gz":
         fin = gzip.open(input_bed, 'rb');
     elif snaptools.utilities.file_type(input_bed) == "bz2":
-        fin = bz2.BZ2File(input_bed, 'r');
+        fin = bz2.BZ2File(input_bed, 'rb');
     elif snaptools.utilities.file_type(input_bed) == "txt":
         fin = open(input_bed, 'r');
     else:
 	    print("error: unrecoginized bed file format, only supports .gz, .bz2, .bed")
 	    sys.exit(1)    
+    
     i = 1
-
     for _read in fin:
+        if type(_read) is bytes:
+            _read = _read.decode();
         barcode = _read.split()[3].split(":")[0].upper();
         if barcode not in barcode_dict:
-            barcode_dict[barcode.decode()] = i
-            i = i + 1
+            barcode_dict[barcode] = i;
+            i = i + 1;
+
     fin.close();
     return barcode_dict;
 
@@ -331,19 +335,29 @@ def get_barcode_cov_from_bed(barcode_list, input_bed):
     
     if file_type(input_bed) == "gz":
         fin = gzip.open(input_bed, 'rb');
+        barcode_dict = collections.defaultdict(lambda : 0);    
+        for _read in fin:
+            barcode = _read.decode().split()[3].split(":")[0].upper();
+            # approximate counting, a read is half fragment
+            barcode_dict[barcode] += 1;
     elif file_type(input_bed) == "bz2":
         fin = bz2.BZ2File(input_bed, 'r');
+        barcode_dict = collections.defaultdict(lambda : 0);    
+        for _read in fin:
+            barcode = _read.decode().split()[3].split(":")[0].upper();
+            # approximate counting, a read is half fragment
+            barcode_dict[barcode] += 1;
     elif file_type(input_bed) == "txt":
         fin = open(input_bed, 'r');
+        barcode_dict = collections.defaultdict(lambda : 0);    
+        for _read in fin:
+            barcode = _read.split()[3].split(":")[0].upper();
+            # approximate counting, a read is half fragment
+            barcode_dict[barcode] += 1;
     else:
 	    print("error: unrecoginized bed file format, only supports .gz, .bz2, .fastq");
 	    sys.exit(1)
     
-    barcode_dict = collections.defaultdict(lambda : 0);    
-    for _read in fin:
-        barcode = _read.split()[3].split(":")[0].upper();
-        # approximate counting, a read is half fragment
-        barcode_dict[barcode] += 1;
     fin.close()
     return barcode_dict;
 
@@ -413,6 +427,9 @@ def group_reads_by_barcode_bed(input_bed):
 	    sys.exit(1)
     
     for cur_read in fin:
+        if type(cur_read) is bytes:
+            cur_read = cur_read.decode();
+
         cur_barcode = cur_read.split()[3].split(":")[0].upper();
         if cur_barcode == pre_barcode:
             read_group_list.append(cur_read)
@@ -823,18 +840,39 @@ def dump_read(snap_file,
     # write fragments down
     if output_file.endswith(".gz"):
         fout = gzip.open(output_file, "wb")
+        # cut the barcode into chunks and write down seperately
+        for i in range(nChunk):
+            # extract the fragment list of given barcodes
+            frag_list = getFragFromBarcode(snap_file, barcode_list[i]);
+            for item in frag_list:
+                if(len(item) > 0):
+                    fout.write(("\t".join(map(str, item)) + "\n").encode('utf-8'));
+            del frag_list
     elif output_file.endswith(".bz2"):
         fout = gzip.open(output_file, "wb")
+        # cut the barcode into chunks and write down seperately
+        for i in range(nChunk):
+            # extract the fragment list of given barcodes
+            frag_list = getFragFromBarcode(snap_file, barcode_list[i]);
+            for item in frag_list:
+                if(len(item) > 0):
+                    fout.write(("\t".join(map(str, item)) + "\n").encode('utf-8'));
+            del frag_list
     else:
         fout = open(output_file, "w")
-
-    # cut the barcode into chunks and write down seperately
-    for i in range(nChunk):
-        # extract the fragment list of given barcodes
-        frag_list = getFragFromBarcode(snap_file, barcode_list[i]);
-        if(len(frag_list) > 0):
+        # cut the barcode into chunks and write down seperately
+        for i in range(nChunk):
+            # extract the fragment list of given barcodes
+            frag_list = getFragFromBarcode(snap_file, barcode_list[i]);
             for item in frag_list:
-                fout.write(("\t".join(map(str, item)) + "\n").encode())
-        del frag_list
+                if(len(item) > 0):
+                    fout.write(("\t".join(map(str, item)) + "\n"));
+            del frag_list
     fout.close()
     return 0
+
+
+
+
+
+

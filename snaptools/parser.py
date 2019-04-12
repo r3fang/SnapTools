@@ -441,7 +441,7 @@ def add_snap_pre_subparser(subparsers):
     parser_build_req.add_argument("--input-file",
                                   type=str,
                                   required=True,
-                                  help="input bam or bed file.")
+                                  help="input bam, bed or bed.gz file.")
    
     parser_build_req.add_argument("--output-snap",
                                   type=str,
