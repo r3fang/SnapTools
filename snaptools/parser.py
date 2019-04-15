@@ -113,7 +113,7 @@ def parse_args():
                       num_threads=args.num_threads,
                       aligner_options=args.aligner_options,
                       if_sort=args.if_sort,
-		              min_cov=args.min_cov,
+                      min_cov=args.min_cov,
                       read_fastq_command=args.read_fastq_command,
                       tmp_folder=args.tmp_folder,
                       overwrite=args.overwrite)

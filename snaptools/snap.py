@@ -748,7 +748,7 @@ def getFragFromBarcode(fname, barcode_list):
     barcode_dict = getBarcodesFromSnap(fname);
     # get the fragments of selected barcodes;
     f = h5py.File(fname, "r", libver='earliest');
-    frag_list = []
+    frag_list = [];
     for barcode in barcode_list:
         if barcode not in barcode_dict: continue;
         barcode_id = barcode_dict[barcode].id;

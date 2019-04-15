@@ -395,14 +395,15 @@ def run_align_pe(input_reference,
 def run_align_se(input_reference,
                  input_fastq1,
                  output_bam,
-                 aligner="bwa",
-                 path_to_aligner=None,
-                 read_fastq_command=None,
-                 num_threads=3,
-                 aligner_options=None,
-                 if_sort=True,
-                 tmp_folder=None,
-                 overwrite=False):
+                 aligner,
+                 path_to_aligner,
+                 read_fastq_command,
+                 num_threads,
+                 min_cov,
+                 aligner_options,
+                 if_sort,
+                 tmp_folder,
+                 overwrite):
 
     """
     Map single-cell ATAC-seq reads in single-end mode
@@ -432,6 +433,9 @@ def run_align_se(input_reference,
     if_sort: if sort the alignment based on read name [True];
 
     tmp_folder: where to store the temporary files [None];
+    
+    min_cov: 
+        barcodes of fragments fewer than min_cov will be filtered before alingment; 
     
     read_fastq_command: command to uncompress a compressed fastq file i.e. 'zcat', 'bzcat' [None];
 
@@ -480,6 +484,15 @@ def run_align_se(input_reference,
     except IOError:
         print(("error: could not create %s, check if the folder exists." % output_bam));
         sys.exit(1)
+    
+    if min_cov > 0:
+        barcode_dict = count_barcode_cov_from_fastq(input_fastq1);
+        barcode_sel = set([key for key in barcode_dict if barcode_dict[key] > min_cov]);
+        if len(barcode_sel) == 0:
+            print("error: no barcode contains fragments more than --min-cov, lower --min-cov and try it again!")
+            sys.exit(1)
+        input_fastq1 = filter_fastq(input_fastq1, barcode_sel, tmp_folder);
+        read_fastq_command = "cat"
     
     # check validity of aligner
     aligner = aligner.lower()
@@ -561,5 +574,8 @@ def run_align_se(input_reference,
         fout.close()
         samfile.close()        
     subprocess.check_call(["rm", ftmp.name]);
-            
+    
+    # remove tmp fastq file after alignment
+    if min_cov > 0:
+        subprocess.check_call(["rm", input_fastq1]);
     return 0
