@@ -581,7 +581,7 @@ def add_dump_read_subparser(subparsers):
 
     parser_build_opt.add_argument("--buffer-size",
                                   type=int,
-                                  default=1000,
+                                  default=100,
                                   required=False,
                                   help="max number of barcodes be stored in the memory.")
     

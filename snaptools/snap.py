@@ -38,6 +38,8 @@ import tempfile
 import warnings
 from builtins import str
 import bz2
+import itertools
+import multiprocessing
 
 try:
     import snaptools.utilities
@@ -689,78 +691,42 @@ def run_snap_view_head(input_snap):
         print(("@SQ\tSN:%s\tSL:%d"%(chr_name, genome_dict[chr_name])));
     f.close();
 
-def getCellPeakVector(f, peak_file, peak_dict, barcode_dict, barcode, tmp_folder):
-    """
-    """
-    idx_list = [];
-    idy_list = [];
-    count_list = [];
-    barcode_id = barcode_dict[barcode];
-    barcode = f["BD/name"][barcode_id].decode();
-    _chroms = f["FM"]["fragChrom"][(f["FM"]["barcodePos"][barcode_id] - 1):(f["FM"]["barcodePos"][barcode_id] + f["FM"]["barcodeLen"][barcode_id] - 1)];
-    _chroms = [item.decode() for item in _chroms];
-    _start = f["FM"]["fragStart"][(f["FM"]["barcodePos"][barcode_id] - 1):(f["FM"]["barcodePos"][barcode_id] + f["FM"]["barcodeLen"][barcode_id] - 1)];
-    _end = f["FM"]["fragLen"][(f["FM"]["barcodePos"][barcode_id] - 1):(f["FM"]["barcodePos"][barcode_id] + f["FM"]["barcodeLen"][barcode_id] - 1)];
-    frag_list_uniq = list(zip(_chroms, _start, _start + _end));
-    
-    # write the fragments as bed file in a temporary file
-    fout_frag = tempfile.NamedTemporaryFile(delete=False, dir=tmp_folder);
-    for item in frag_list_uniq:
-        fout_frag.write("\t".join(map(str, item))+"\n");
-    fout_frag.close();
-    
-    # find overlaps
-    frag_bt = pybedtools.BedTool(fout_frag.name); 
-    peak_bt = pybedtools.BedTool(peak_file);      
-    
-    # count for frequency            
-    peak_cov = collections.defaultdict(lambda : 0);            
-    for item in frag_bt.intersect(peak_bt, wa=True, wb=True):
-        elems = str(item).split();
-        key = (elems[3], int(elems[4]), int(elems[5]));
-        peak_cov[key] += 1;
-    
-    # save the count matrix for current barcode            
-    for key in peak_cov:
-        if key in peak_dict and barcode in barcode_dict:
-            idx_list.append(barcode_dict[barcode]);
-            idy_list.append(peak_dict[key]);
-            count_list.append(peak_cov[key]);
-    
-    # remove the tmporary file
-    subprocess.check_call(["rm", fout_frag.name]);
-    return((idx_list, idy_list, count_list))
-
-
-def getFragFromBarcode(fname, barcode_list):
+def getFragFromBarcode(fname, barcode_list, barcode_dict):
     """Extract fragments of given barcodes
 
     Attributes:
         fname: a snap file
 
         barcode_list: a list of selected barcodes
+
+        barcode_dict: a dictionary contains barcodes and attributes
     
     Return:
         a list of fragments
     """
-
-    # extract the fragments of given barcodes;
-    barcode_dict = getBarcodesFromSnap(fname);
     # get the fragments of selected barcodes;
+    barcode_pos_list = [];
+    barcode_len_list = [];
     f = h5py.File(fname, "r", libver='earliest');
-    frag_list = [];
     for barcode in barcode_list:
-        if barcode not in barcode_dict: continue;
+        if barcode not in barcode_dict: 
+            print (('warning: barcode %s does not exist in the snap file!' % barcode));
+            continue;
         barcode_id = barcode_dict[barcode].id;
-        barcodePos = f["FM"]["barcodePos"][barcode_id-1] - 1
-        barcodeLen = f["FM"]["barcodeLen"][barcode_id-1]
-        _chroms = [item.decode() for item in f["FM"]["fragChrom"][barcodePos:(barcodePos + barcodeLen)]];
-        _start = f["FM"]["fragStart"][barcodePos:(barcodePos + barcodeLen)];
-        _len = f["FM"]["fragLen"][barcodePos:(barcodePos + barcodeLen)];        
-        frag_list = frag_list + list(zip(_chroms, _start, _start + _len, [barcode] * len(_chroms)));
-    f.close()
-    return frag_list
-  
+        barcode_pos = f["FM"]["barcodePos"][barcode_id-1] - 1;
+        barcode_len = f["FM"]["barcodeLen"][barcode_id-1];
+        barcode_pos_list.append(range(barcode_pos, barcode_pos + barcode_len));
+        barcode_len_list.append(barcode_len);
+    barcode_pos_list = list(itertools.chain.from_iterable(barcode_pos_list));
+    _chroms = [item.decode() for item in f["FM"]["fragChrom"][barcode_pos_list]];
+    _chroms = [item for item in f["FM"]["fragChrom"][barcode_pos_list]];
+    _start = f["FM"]["fragStart"][barcode_pos_list];
+    _end = _start + f["FM"]["fragLen"][barcode_pos_list];
+    _barcode = [[barcode] * num for (barcode, num) in zip(barcode_list, barcode_len_list)];
+    _barcode = list(itertools.chain.from_iterable(_barcode));
+    f.close();
+    return(list(zip(_chroms, _start, _end, _barcode)));
+        
 def dump_read(snap_file,
               output_file,
               buffer_size,
@@ -813,11 +779,13 @@ def dump_read(snap_file,
             sys.exit(1);    
 
     # identify the barcodes
-    if barcode_file is None:
-        barcode_dict = getBarcodesFromSnap(snap_file);
-    else:
-        barcode_dict = getBarcodesFromTxt(barcode_file);
+    barcode_dict_ref = getBarcodesFromSnap(snap_file);
     
+    if barcode_file is not None:
+        barcode_dict = getBarcodesFromTxt(barcode_file);
+    else:
+        barcode_dict = barcode_dict_ref;
+        
     # check if tmp_folder is given
     if(tmp_folder!=None):
         if(not os.path.isdir(tmp_folder)):
@@ -843,7 +811,7 @@ def dump_read(snap_file,
         # cut the barcode into chunks and write down seperately
         for i in range(nChunk):
             # extract the fragment list of given barcodes
-            frag_list = getFragFromBarcode(snap_file, barcode_list[i]);
+            frag_list = getFragFromBarcode(snap_file, barcode_list[i], barcode_dict_ref);
             for item in frag_list:
                 if(len(item) > 0):
                     fout.write(("\t".join(map(str, item)) + "\n").encode('utf-8'));
@@ -853,7 +821,7 @@ def dump_read(snap_file,
         # cut the barcode into chunks and write down seperately
         for i in range(nChunk):
             # extract the fragment list of given barcodes
-            frag_list = getFragFromBarcode(snap_file, barcode_list[i]);
+            frag_list = getFragFromBarcode(snap_file, barcode_list[i], barcode_dict_ref);
             for item in frag_list:
                 if(len(item) > 0):
                     fout.write(("\t".join(map(str, item)) + "\n").encode('utf-8'));
@@ -863,16 +831,10 @@ def dump_read(snap_file,
         # cut the barcode into chunks and write down seperately
         for i in range(nChunk):
             # extract the fragment list of given barcodes
-            frag_list = getFragFromBarcode(snap_file, barcode_list[i]);
+            frag_list = getFragFromBarcode(snap_file, barcode_list[i], barcode_dict_ref);
             for item in frag_list:
                 if(len(item) > 0):
                     fout.write(("\t".join(map(str, item)) + "\n"));
             del frag_list
     fout.close()
     return 0
-
-
-
-
-
-
