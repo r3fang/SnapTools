@@ -94,10 +94,18 @@ def dex_fastq(input_fastq,
             
     while True:
         cur_r1_name = fr1.readline().strip()[1:]
+        if type(cur_r1_name) is bytes:
+            cur_r1_name = cur_r1_name.decode();
         if cur_r1_name == "": break        
         cur_r1_read = fr1.readline().strip()
         cur_r1_plus = fr1.readline().strip()
         cur_r1_qual = fr1.readline().strip()
+        if type(cur_r1_read) is bytes:
+            cur_r1_read = cur_r1_read.decode();
+        if type(cur_r1_qual) is bytes:
+            cur_r1_qual = cur_r1_qual.decode();
+        if type(cur_r1_plus) is bytes:
+            cur_r1_plus = cur_r1_plus.decode();
         
         cur_idex_list = []
         for fix in index_files:
@@ -105,15 +113,23 @@ def dex_fastq(input_fastq,
             cur_read = fix.readline().strip()
             cur_plus = fix.readline().strip()
             cur_qual = fix.readline().strip()
+            if type(cur_name) is bytes:
+                cur_name = cur_name.decode();
+            if type(cur_read) is bytes:
+                cur_read = cur_read.decode();
+            if type(cur_plus) is bytes:
+                cur_plus = cur_plus.decode();
+            if type(cur_qual) is bytes:
+                cur_qual = cur_qual.decode();
             cur_idex_list.append(cur_read)
+            
         cur_barcode = "".join(cur_idex_list)
             
         if not (cur_name.split()[0] == cur_r1_name.split()[0]): sys.exit("read name does not match")        
-        fout.write('@' + cur_barcode + ':' + cur_r1_name+"\n")
-        fout.write(cur_r1_read+"\n")
-        fout.write("+\n")
-        fout.write(cur_r1_qual+"\n")                   
-
+        fout.write(('@' + cur_barcode + ':' + cur_r1_name+"\n").encode('utf-8'))
+        fout.write((cur_r1_read+"\n").encode('utf-8'))
+        fout.write(("+\n").encode('utf-8'))
+        fout.write((cur_r1_qual+"\n").encode('utf-8'))                   
     fout.close()
     fr1.close()
     for fix in index_files:
