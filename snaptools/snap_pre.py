@@ -222,15 +222,20 @@ def snap_pre(input_file,
         barcode_dict = snaptools.snap.getBarcodesFromTxt(barcode_file);
     else:
         barcode_dict = snaptools.snap.getBarcodesFromInput(input_file, file_format);
-    
-    if min_cov == 0 and max_num == 10000000:
-        barcode_dict = barcode_dict;
-    else:       
         barcode_cov = snaptools.snap.getBarcodeCov(list(barcode_dict.keys()), input_file, file_format);
         barcode_cov = sorted(list(barcode_cov.items()), key=operator.itemgetter(1), reverse=True);
         barcode_cov = barcode_cov[0:min(len(barcode_cov), max_num)];
         barcodes = [key for [key, value] in barcode_cov if value > min_cov];
-        barcode_dict = collections.OrderedDict(list(zip(sorted(barcodes), list(range(1,(len(barcodes)+1))))));       
+        barcode_dict = collections.OrderedDict(list(zip(sorted(barcodes), list(range(1,(len(barcodes)+1))))));   
+    
+    #if min_cov == 0 and max_num == 10000000:
+    #    barcode_dict = barcode_dict;
+    #else:       
+    #    barcode_cov = snaptools.snap.getBarcodeCov(list(barcode_dict.keys()), input_file, file_format);
+    #    barcode_cov = sorted(list(barcode_cov.items()), key=operator.itemgetter(1), reverse=True);
+    #    barcode_cov = barcode_cov[0:min(len(barcode_cov), max_num)];
+    #    barcodes = [key for [key, value] in barcode_cov if value > min_cov];
+    #    barcode_dict = collections.OrderedDict(list(zip(sorted(barcodes), list(range(1,(len(barcodes)+1))))));       
     
     f = h5py.File(output_snap, "w", libver='earliest');
     f.create_group("HD");

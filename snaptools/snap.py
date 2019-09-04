@@ -192,7 +192,9 @@ def getBarcodesFromTxt(fname):
     with open(fname) as fin:
         for line in fin:
             if line.startswith("#"): continue;
-            barcode = line.split()[0].upper()
+            if type(line) is bytes:
+                line = line.decode();
+            barcode = line.split()[0].upper();
             barcode_list.append(barcode);            
     barocde_num = len(set(barcode_list));
     if barocde_num < len(barcode_list):
